@@ -1,2 +1,2 @@
 # investmentanalysis01
-This is a program that analysis stock exchange investments.
+This is a program that analyzes stock exchange investments.
