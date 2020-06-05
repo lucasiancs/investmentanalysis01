@@ -24,7 +24,7 @@ investment['Weekly Volatility'] = investment['Returns'].rolling(7).std()
 investment['6-Month-Volatility'] = investment['Returns'].rolling(window=6).std()
 investment['12-Month-Volatility'] = investment['Returns'].rolling(window=12).std()
       
-invreturns = pd.concat([investment['Returns'],investment['6-Month-SMA Returns'],investment['12-Month-SMA Returns'],investment['EWMA12-Returns']],axis=1)
+invreturns = pd.concat([investment['Returns'],investment['6-Month-SMA Returns'],investment['12-Month-SMA Returns'],investment['EWMA12-Returns'],investment['Cumulative Returns']],axis=1)
 invreturns.columns = ['Returns','6-Month-SMA Returns','12-Month-SMA Returns','EWMA12-Returns','Cumulative Returns']
 involatility = pd.concat([investment['Weekly Volatility'],investment['6-Month-Volatility'],investment['12-Month-Volatility']],axis=1)
 involatility.columns = ['Weekly Volatility','6-Month-Volatility','12-Month-Volatility']
