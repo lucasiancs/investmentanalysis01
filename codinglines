@@ -1,9 +1,3 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas_datareader.data as web
-import datetime
-import statsmodels.api as sm
 code = input('Insert here the investment you want to analyse:')
 print('You chose:',code.upper())
 
@@ -20,17 +14,18 @@ end = datetime.datetime(year2,month2,day2)
 
 investment = web.DataReader('{}'.format(code.upper()),'yahoo',start,end)
 
-investment['Returns %'] = ((investment['Adj Close']/investment['Adj Close'].shift(1)) - 1) * 100
-investment['6-Month-SMA Returns'] = investment['Returns %'].rolling(window=6).mean()
-investment['12-Month-SMA Returns'] = investment['Returns %'].rolling(window=12).mean()
-investment['EWMA12-Returns'] = investment['Returns %'].ewm(span=12).mean()
+investment['Returns'] = ((investment['Adj Close']/investment['Adj Close'].shift(1)) - 1)
+investment['6-Month-SMA Returns'] = investment['Returns'].rolling(window=6).mean()
+investment['12-Month-SMA Returns'] = investment['Returns'].rolling(window=12).mean()
+investment['EWMA12-Returns'] = investment['Returns'].ewm(span=12).mean()
+investment['Cumulative Returns'] = investment['Adj Close']/investment['Adj Close'].loc[1]
 
-investment['Weekly Volatility'] = investment['Returns %'].rolling(7).std()
-investment['6-Month-Volatility'] = investment['Returns %'].rolling(window=6).std()
-investment['12-Month-Volatility'] = investment['Returns %'].rolling(window=12).std()
+investment['Weekly Volatility'] = investment['Returns'].rolling(7).std()
+investment['6-Month-Volatility'] = investment['Returns'].rolling(window=6).std()
+investment['12-Month-Volatility'] = investment['Returns'].rolling(window=12).std()
       
-invreturns = pd.concat([investment['Returns %'],investment['6-Month-SMA Returns'],investment['12-Month-SMA Returns'],investment['EWMA12-Returns']],axis=1)
-invreturns.columns = ['Returns %','6-Month-SMA Returns','12-Month-SMA Returns','EWMA12-Returns']
+invreturns = pd.concat([investment['Returns'],investment['6-Month-SMA Returns'],investment['12-Month-SMA Returns'],investment['EWMA12-Returns']],axis=1)
+invreturns.columns = ['Returns','6-Month-SMA Returns','12-Month-SMA Returns','EWMA12-Returns','Cumulative Returns']
 involatility = pd.concat([investment['Weekly Volatility'],investment['6-Month-Volatility'],investment['12-Month-Volatility']],axis=1)
 involatility.columns = ['Weekly Volatility','6-Month-Volatility','12-Month-Volatility']
 
@@ -42,4 +37,7 @@ moneyi = int(input('How much money, in $, you want to invest?'))
 moneyf = (investment.loc[end]['Adj Close']/investment.loc[start]['Adj Close']) * moneyi
 fresult = moneyf - moneyi
 
-print('If you invested',moneyi,'at',start,'you would have',moneyf,'at',end,'that is a gain of',fresult,'dollars!')
+if fresult > 0:
+    print('You gained',fresult,'dollars with this investment!')
+elif fresult < 0:
+    print('You lost',fresult,'dollars with this investment!')
