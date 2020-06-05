@@ -18,7 +18,7 @@ investment['Returns'] = ((investment['Adj Close']/investment['Adj Close'].shift(
 investment['6-Month-SMA Returns'] = investment['Returns'].rolling(window=6).mean()
 investment['12-Month-SMA Returns'] = investment['Returns'].rolling(window=12).mean()
 investment['EWMA12-Returns'] = investment['Returns'].ewm(span=12).mean()
-investment['Cumulative Returns'] = investment['Adj Close']/investment['Adj Close'].loc[1]
+investment['Cumulative Returns'] = investment['Adj Close']/investment.loc[start]['Adj Close']
 
 investment['Weekly Volatility'] = investment['Returns'].rolling(7).std()
 investment['6-Month-Volatility'] = investment['Returns'].rolling(window=6).std()
